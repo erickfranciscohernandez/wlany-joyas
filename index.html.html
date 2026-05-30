@@ -370,21 +370,14 @@ footer{background:#080808;padding:60px 24px 24px;}
 
 <script>
 var prods = [
-  {id:1, name:"Aros de Corazón", mat:"Oro 18K · Circones y Rubíes", cat:"aros", img:"https://i.ibb.co/vxrYBfnk/aros-de-corazon.jpg"},
-  {id:2, name:"Aros Tous", mat:"Oro 18K", cat:"aros", img:"https://i.ibb.co/PGXd3CYM/Aros-colgante-de-oso.jpg"},
-  {id:3, name:"Colgante Aros Tous", mat:"Oro 18K", cat:"aros", img:"https://i.ibb.co/Xf5H7w5G/Aro-colgante-oso-tous.jpg"},
-  {id:4, name:"Anillo Corazón Suizo", mat:"Oro 18K · Circones", cat:"anillos", img:"https://i.ibb.co/4ZjV79BM/anillo-suizo.jpg"},
-  {id:5, name:"Pulsera Broche Cajón Doble Cierre", mat:"Oro 18K", cat:"pulseras", img:"https://i.ibb.co/RGvm5qVG/pulsera.jpg"},
-  {id:6, name:"Aros Colgantes", mat:"Oro 18K", cat:"aros", img:"https://i.ibb.co/bMfFpZhD/aro-colgante.jpg"},
-  {id:7, name:"Aros Colgantes II", mat:"Oro 18K", cat:"aros", img:"https://i.ibb.co/qYKY5sBV/Aro-colgante-de-oso.jpg"}
+  {id:1, name:"Aros de Corazón", mat:"Oro 18K · Circones y Rubíes", cat:"aros", img:"https://raw.githubusercontent.com/erickfranciscohernandez/wlany-joyas/main/aros%20de%20corazon.jpeg"},
+  {id:2, name:"Aros Tous", mat:"Oro 18K", cat:"aros", img:"https://raw.githubusercontent.com/erickfranciscohernandez/wlany-joyas/main/Aros%20colgante%20de%201%20oso.jpeg"},
+  {id:3, name:"Colgante Aros Tous", mat:"Oro 18K", cat:"aros", img:"https://raw.githubusercontent.com/erickfranciscohernandez/wlany-joyas/main/Aro%20colgante%20oso%20tous.jpeg"},
+  {id:4, name:"Anillo Corazón Suizo", mat:"Oro 18K · Circones", cat:"anillos", img:"https://raw.githubusercontent.com/erickfranciscohernandez/wlany-joyas/main/anillo%20suizo.jpeg"},
+  {id:5, name:"Pulsera Broche Cajón Doble Cierre", mat:"Oro 18K", cat:"pulseras", img:"https://raw.githubusercontent.com/erickfranciscohernandez/wlany-joyas/main/pulsera.jpeg"},
+  {id:6, name:"Aros Colgantes", mat:"Oro 18K", cat:"aros", img:"https://raw.githubusercontent.com/erickfranciscohernandez/wlany-joyas/main/aro%20colgante.jpeg"},
+  {id:7, name:"Aros Colgantes II", mat:"Oro 18K", cat:"aros", img:"https://raw.githubusercontent.com/erickfranciscohernandez/wlany-joyas/main/Aro%20colgante%20de%20oso.jpeg"}
 ];
-
-// Imágenes guardadas localmente
-var localImgs = {};
-
-function getImg(id) {
-  return localImgs[id] || prods.filter(function(p){return p.id===id;})[0].img;
-}
 
 function renderProducts(filter) {
   var grid = document.getElementById("prod-grid");
@@ -392,19 +385,10 @@ function renderProducts(filter) {
   var html = "";
   for (var i = 0; i < list.length; i++) {
     var p = list[i];
-    var imgSrc = localImgs[p.id] || "";
     html += '<div class="prod-card">';
-    html += '<div class="prod-img" onclick="openLightbox(' + p.id + ')">';
+    html += '<div class="prod-img" onclick="openLightbox(\'' + p.img + '\')">';
     html += '<div class="pbadge">Oro 18K</div>';
-    if (imgSrc) {
-      html += '<img src="' + imgSrc + '" alt="' + p.name + '"/>';
-    } else {
-      html += '<div class="prod-placeholder" style="height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">';
-      html += '<span style="font-size:48px;">💍</span>';
-      html += '<label style="cursor:pointer;background:var(--gold);color:var(--black);font-family:sans-serif;font-size:11px;padding:8px 14px;letter-spacing:1px;font-weight:700;">';
-      html += '📷 Subir foto<input type="file" accept="image/*" style="display:none;" onchange="loadImg(event,' + p.id + ')"/>';
-      html += '</label></div>';
-    }
+    html += '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\'"/>';
     html += '</div>';
     html += '<div class="prod-info">';
     html += '<div class="prod-name">' + p.name + '</div>';
@@ -415,18 +399,6 @@ function renderProducts(filter) {
     html += '</div></div></div>';
   }
   grid.innerHTML = html;
-}
-
-function loadImg(event, id) {
-  var file = event.target.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    localImgs[id] = e.target.result;
-    var filter = document.querySelector(".cat-card.active").id.replace("cat-","");
-    renderProducts(filter);
-  };
-  reader.readAsDataURL(file);
 }
 
 function filterProducts(cat) {
@@ -447,10 +419,8 @@ function closeModal() {
   document.getElementById("modal-overlay").classList.remove("open");
 }
 
-function openLightbox(id) {
-  var src = localImgs[id];
-  if (!src) return;
-  document.getElementById("lightbox-img").src = src;
+function openLightbox(url) {
+  document.getElementById("lightbox-img").src = url;
   document.getElementById("lightbox").classList.add("open");
 }
 
