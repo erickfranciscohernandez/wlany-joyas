@@ -133,6 +133,8 @@ footer{background:#080808;padding:60px 24px 24px;}
 .lbclose{position:absolute;top:20px;right:28px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;}
 .novios-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
 @media(max-width:768px){nav{display:none;}.stats-inner{grid-template-columns:repeat(2,1fr);}.footer-grid{grid-template-columns:1fr 1fr;}.footer-grid>div:first-child{grid-column:1/-1;}.fbottom{flex-direction:column;gap:8px;text-align:center;}.novios-grid{grid-template-columns:1fr;}}
+.comp-filter{background:transparent;border:1px solid #333;color:var(--gray);padding:8px 20px;font-family:sans-serif;font-size:12px;letter-spacing:1px;cursor:pointer;transition:.3s;text-transform:uppercase;}
+.comp-filter:hover,.comp-filter.active{background:var(--gold);color:var(--black);border-color:var(--gold);font-weight:700;}
 </style>
 </head>
 <body>
@@ -146,6 +148,7 @@ footer{background:#080808;padding:60px 24px 24px;}
     <div class="logo">Wlany <span>Joyerías</span></div>
     <nav>
       <a href="#categorias">Colecciones</a>
+      <a href="#compromiso">Compromiso</a>
       <a href="#novios">Novios</a>
       <a href="#especiales">Servicios</a>
       <a href="#contacto">Contacto</a>
@@ -199,6 +202,27 @@ footer{background:#080808;padding:60px 24px 24px;}
     <div class="prod-grid" id="prod-grid"></div>
   </div>
 </section>
+<!-- ANILLOS DE COMPROMISO -->
+<section style="background:var(--black);padding:80px 24px;" id="compromiso">
+  <div class="section-inner">
+    <div class="section-header">
+      <p class="stag">Para siempre</p>
+      <h2 class="stitle">Anillos de <span>Compromiso</span></h2>
+      <div class="divider"></div>
+      <p style="font-family:sans-serif;color:var(--gray);font-size:14px;margin-top:16px;max-width:600px;margin-left:auto;margin-right:auto;">El verdadero amor merece una pieza única. Descubre nuestra colección de anillos de compromiso en oro 18K con piedras certificadas.</p>
+    </div>
+    <!-- Filtros estilo -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;">
+      <button onclick="filterComp('todos')" class="comp-filter active" id="cf-todos">Todos</button>
+      <button onclick="filterComp('solitario')" class="comp-filter" id="cf-solitario">Solitario</button>
+      <button onclick="filterComp('halo')" class="comp-filter" id="cf-halo">Halo</button>
+      <button onclick="filterComp('vintage')" class="comp-filter" id="cf-vintage">Vintage</button>
+      <button onclick="filterComp('pavé')" class="comp-filter" id="cf-pavé">Pavé</button>
+    </div>
+    <div class="prod-grid" id="comp-grid"></div>
+  </div>
+</section>
+
 <section style="background:linear-gradient(135deg,#1a0d12,#0d0d0d,#1a1208);padding:80px 24px;" id="novios">
   <div class="section-inner">
     <div class="novios-grid">
@@ -361,6 +385,50 @@ var fadeEls=document.querySelectorAll(".section-header,.special-card,.cat-card,.
 for(var i=0;i<fadeEls.length;i++){fadeEls[i].classList.add("fade-in");}
 var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add("visible");}});},{threshold:0.1});
 for(var j=0;j<fadeEls.length;j++){observer.observe(fadeEls[j]);}
+var compProds = [
+  {id:101, name:"Solitario Clásico", mat:"Oro 18K · Diamante", estilo:"solitario", icon:"💍", desc:"Diseño atemporal con diamante central"},
+  {id:102, name:"Solitario Moderno", mat:"Oro 18K Blanco · Diamante", estilo:"solitario", icon:"💍", desc:"Banda delgada con piedra brillante"},
+  {id:103, name:"Halo Romántico", mat:"Oro 18K Rosé · Diamantes", estilo:"halo", icon:"💎", desc:"Centro rodeado de pequeños diamantes"},
+  {id:104, name:"Halo Doble", mat:"Oro 18K · Diamantes", estilo:"halo", icon:"💎", desc:"Doble corona de brillantes"},
+  {id:105, name:"Vintage Floral", mat:"Oro 18K · Rubí", estilo:"vintage", icon:"🌸", desc:"Diseño floral inspirado en la Belle Époque"},
+  {id:106, name:"Vintage Art Déco", mat:"Oro 18K · Esmeralda", estilo:"vintage", icon:"💚", desc:"Líneas geométricas estilo años 20"},
+  {id:107, name:"Pavé Eternity", mat:"Oro 18K · Diamantes", estilo:"pavé", icon:"✨", desc:"Banda completa de brillantes"},
+  {id:108, name:"Pavé Romántico", mat:"Oro 18K Rosé · Diamantes", estilo:"pavé", icon:"✨", desc:"Micro pavé con centro en zafiro"}
+];
+
+function renderComp(filter) {
+  var grid = document.getElementById("comp-grid");
+  var list = filter === "todos" ? compProds : compProds.filter(function(p){return p.estilo===filter;});
+  var html = "";
+  for (var i=0;i<list.length;i++) {
+    var p = list[i];
+    html += '<div class="prod-card">';
+    html += '<div class="prod-img" style="cursor:pointer;" onclick="openConsulta(\''+p.name+'\')">';
+    html += '<div class="pbadge">'+p.estilo.charAt(0).toUpperCase()+p.estilo.slice(1)+'</div>';
+    html += '<div style="height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1208,#2a1a20);gap:8px;">';
+    html += '<span style="font-size:72px;">'+p.icon+'</span>';
+    html += '<span style="font-family:sans-serif;font-size:11px;color:var(--gray);letter-spacing:1px;">'+p.desc+'</span>';
+    html += '</div></div>';
+    html += '<div class="prod-info">';
+    html += '<div class="prod-name">'+p.name+'</div>';
+    html += '<div class="prod-mat">'+p.mat+'</div>';
+    html += '<div class="prod-footer">';
+    html += '<span class="prod-price">Consultar precio</span>';
+    html += '<button class="btn-consultar" onclick="openConsulta(\''+p.name+'\')">Consultar</button>';
+    html += '</div></div></div>';
+  }
+  grid.innerHTML = html;
+}
+
+function filterComp(estilo) {
+  var btns = document.querySelectorAll(".comp-filter");
+  for (var i=0;i<btns.length;i++){btns[i].classList.remove("active");}
+  var el = document.getElementById("cf-"+estilo);
+  if(el){el.classList.add("active");}
+  renderComp(estilo);
+}
+
+renderComp("todos");
 renderProducts("todos");
 </script>
 </body>
